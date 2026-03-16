@@ -48,6 +48,9 @@
 #if TIKU_CLI_CMD_TIMER
 #include "commands/tiku_cli_cmd_timer.h"
 #endif
+#if TIKU_CLI_CMD_KILL
+#include "commands/tiku_cli_cmd_kill.h"
+#endif
 
 /*---------------------------------------------------------------------------*/
 /* FORWARD DECLARATIONS                                                      */
@@ -82,6 +85,9 @@ static const tiku_cli_cmd_t tiku_cli_commands[] = {
 #endif
 #if TIKU_CLI_CMD_TIMER
     {"timer", "Software timer status",   tiku_cli_cmd_timer},
+#endif
+#if TIKU_CLI_CMD_KILL
+    {"kill",  "Terminate a process",     tiku_cli_cmd_kill},
 #endif
     {NULL, NULL, NULL}
 };

@@ -83,4 +83,7 @@ typedef struct {
  */
 const tiku_cli_cmd_t *tiku_cli_get_commands(void);
 
+/** The CLI process (defined in tiku_cli.c) */
+extern struct tiku_process tiku_cli_process;
+
 #endif /* TIKU_CLI_H_ */

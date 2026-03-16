@@ -44,6 +44,7 @@
 #define TIKU_CLI_CMD_PS     1  /**< ps    - List active processes */
 #define TIKU_CLI_CMD_INFO   1  /**< info  - System overview */
 #define TIKU_CLI_CMD_TIMER  1  /**< timer - Software timer status */
+#define TIKU_CLI_CMD_KILL   1  /**< kill  - Terminate a process */
 
 /** @} */
 
