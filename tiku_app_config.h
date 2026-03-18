@@ -43,4 +43,11 @@
 #include "cli/tiku_cli_config.h"
 #endif
 
+/*---------------------------------------------------------------------------*/
+/* NET APPLICATION                                                           */
+/*---------------------------------------------------------------------------*/
+
+/* APP=net has no additional config — all tuning lives in
+ * tikukits/net/tiku_kits_net.h (MTU, IP address, TTL, poll rate). */
+
 #endif /* TIKU_APP_CONFIG_H_ */
