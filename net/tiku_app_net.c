@@ -26,5 +26,7 @@
 
 #include <kernel/process/tiku_process.h>
 #include <tikukits/net/ipv4/tiku_kits_net_ipv4.h>
+#include <tikukits/time/ntp/tiku_kits_time_ntp.h>
 
-TIKU_AUTOSTART_PROCESSES(&tiku_kits_net_process);
+TIKU_AUTOSTART_PROCESSES(&tiku_kits_net_process,
+                          &tiku_kits_time_ntp_process);
