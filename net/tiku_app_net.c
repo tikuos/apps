@@ -26,7 +26,20 @@
 
 #include <kernel/process/tiku_process.h>
 #include <tikukits/net/ipv4/tiku_kits_net_ipv4.h>
+#include <tikukits/net/ipv4/tiku_kits_net_syslog.h>
 #include <tikukits/time/ntp/tiku_kits_time_ntp.h>
 
+#if TIKU_KITS_NET_DHCP_ENABLE
+#include <tikukits/net/ipv4/tiku_kits_net_dhcp.h>
+#endif
+
+#if TIKU_KITS_NET_DHCP_ENABLE
 TIKU_AUTOSTART_PROCESSES(&tiku_kits_net_process,
-                          &tiku_kits_time_ntp_process);
+                          &tiku_kits_net_dhcp_process,
+                          &tiku_kits_time_ntp_process,
+                          &tiku_kits_net_syslog_process);
+#else
+TIKU_AUTOSTART_PROCESSES(&tiku_kits_net_process,
+                          &tiku_kits_time_ntp_process,
+                          &tiku_kits_net_syslog_process);
+#endif
