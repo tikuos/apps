@@ -44,8 +44,5 @@ TIKU_AUTOSTART_PROCESSES(&tiku_kits_net_process,
                           &tiku_kits_net_syslog_process,
                           &tiku_kits_net_coap_process);
 #else
-TIKU_AUTOSTART_PROCESSES(&tiku_kits_net_process,
-                          &tiku_kits_time_ntp_process,
-                          &tiku_kits_net_syslog_process,
-                          &tiku_kits_net_coap_process);
+TIKU_AUTOSTART_PROCESSES(&tiku_kits_net_process);
 #endif
