@@ -35,6 +35,11 @@
 #include "tiku_cli_parser.h"
 #include <kernel/timers/tiku_timer.h>
 
+#if TIKU_CLI_TCP_ENABLE
+#include "tiku_cli_io_tcp.h"
+#include <tikukits/net/ipv4/tiku_kits_net_ipv4.h>  /* tiku_kits_net_process */
+#endif
+
 /*---------------------------------------------------------------------------*/
 /* COMMAND HEADERS                                                           */
 /*---------------------------------------------------------------------------*/
@@ -148,18 +153,46 @@ TIKU_PROCESS_THREAD(tiku_cli_process, ev, data)
     TIKU_PROCESS_BEGIN();
 
     /* ---- One-time init ---- */
-    tiku_cli_io_set_backend(&tiku_cli_io_uart);
     tiku_cli_parser_init(tiku_cli_commands);
-
     line_pos = 0;
+
+#if TIKU_CLI_TCP_ENABLE
+    tiku_cli_io_tcp_init();
+    /* Banner deferred until a TCP client connects (see loop below) */
+#else
+    tiku_cli_io_set_backend(&tiku_cli_io_uart);
     CLI_PRINTF("\n--- TikuOS CLI ---\n");
     CLI_PRINTF("Type 'help' for available commands.\n");
     CLI_PRINTF("tikuOS> ");
+#endif
+
     tiku_timer_set_event(&cli_timer, TIKU_CLI_POLL_TICKS);
 
     /* ---- Main loop ---- */
     while (1) {
         TIKU_PROCESS_WAIT_EVENT_UNTIL(ev == TIKU_EVENT_TIMER);
+
+#if TIKU_CLI_TCP_ENABLE
+        /* --- TCP connection lifecycle --- */
+        if (!tiku_cli_io_tcp_is_connected()) {
+            /* Not connected — if we were, clear the backend */
+            if (tiku_cli_io_get_backend() == &tiku_cli_io_tcp) {
+                tiku_cli_io_set_backend((void *)0);
+                line_pos = 0;
+            }
+            tiku_timer_reset(&cli_timer);
+            continue;
+        }
+        /* New connection arrived — install backend and show banner */
+        if (tiku_cli_io_get_backend() != &tiku_cli_io_tcp) {
+            tiku_cli_io_set_backend(&tiku_cli_io_tcp);
+            line_pos = 0;
+            CLI_PRINTF("\n--- TikuOS Telnet Shell ---\n");
+            CLI_PRINTF("Type 'help' for available commands.\n");
+            CLI_PRINTF("tikuOS> ");
+            tiku_cli_io_tcp_flush();
+        }
+#endif
 
         /* Drain all available characters from the backend */
         while (tiku_cli_io_rx_ready()) {
@@ -196,11 +229,18 @@ TIKU_PROCESS_THREAD(tiku_cli_process, ev, data)
             }
         }
 
+#if TIKU_CLI_TCP_ENABLE
+        tiku_cli_io_tcp_flush();
+#endif
         tiku_timer_reset(&cli_timer);
     }
 
     TIKU_PROCESS_END();
 }
 
-/* Auto-start the CLI process */
+/* Auto-start the CLI process (and the net process when TCP is enabled) */
+#if TIKU_CLI_TCP_ENABLE
+TIKU_AUTOSTART_PROCESSES(&tiku_kits_net_process, &tiku_cli_process);
+#else
 TIKU_AUTOSTART_PROCESSES(&tiku_cli_process);
+#endif

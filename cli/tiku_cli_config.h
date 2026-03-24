@@ -48,4 +48,24 @@
 
 /** @} */
 
+/** @defgroup TIKU_CLI_BACKENDS CLI Backend Selection
+ * @brief Enable optional I/O backends (UART is always available).
+ * @{
+ */
+
+/**
+ * @brief Enable TCP (telnet) backend on port 23.
+ *
+ * Requires the TikuKits TCP stack (TIKU_KITS_NET_TCP_ENABLE=1).
+ * The net process must be auto-started alongside the CLI process.
+ * Build with:
+ *   make APP=cli MCU=msp430fr5969 \
+ *        EXTRA_CFLAGS="-DTIKU_KITS_NET_TCP_ENABLE=1 -DTIKU_CLI_TCP_ENABLE=1"
+ */
+#ifndef TIKU_CLI_TCP_ENABLE
+#define TIKU_CLI_TCP_ENABLE 1
+#endif
+
+/** @} */
+
 #endif /* TIKU_CLI_CONFIG_H_ */
