@@ -33,14 +33,15 @@
 #define TIKU_APP_CONFIG_H_
 
 /** Master application enable */
-#define TIKU_APPS_ENABLE 1
+#define TIKU_APPS_ENABLE 0
 
 /*---------------------------------------------------------------------------*/
 /* CLI APPLICATION                                                           */
 /*---------------------------------------------------------------------------*/
 
 #if defined(TIKU_APP_CLI)
-#include "cli/tiku_cli_config.h"
+/* CLI has moved to kernel/shell — config included via tiku.h when
+ * TIKU_SHELL_ENABLE is set (which APP=cli sets automatically). */
 #endif
 
 /*---------------------------------------------------------------------------*/

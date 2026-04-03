@@ -40,24 +40,28 @@ void
 tiku_cli_cmd_ps(uint8_t argc, const char *argv[])
 {
     struct tiku_process *p;
-    uint8_t count = 0;
+    uint8_t i;
 
     (void)argc;
     (void)argv;
 
-    CLI_PRINTF("PID  NAME             STATE\n");
-    CLI_PRINTF("---  ---------------  -------\n");
+    CLI_PRINTF("PID  STATE     SRAM  FRAM  NAME\n");
+    CLI_PRINTF("---  --------  ----  ----  ---------------\n");
 
-    for (p = tiku_process_list_head; p != NULL; p = p->next) {
-        count++;
-        CLI_PRINTF("%3u  %s", count,
-                    p->name ? p->name : "(null)");
-        CLI_PRINTF("  %s\n",
-                    p->is_running ? "running" : "stopped");
+    for (i = 0; i < TIKU_PROCESS_MAX; i++) {
+        p = tiku_process_get((int8_t)i);
+        if (p == NULL) {
+            continue;
+        }
+        CLI_PRINTF("%3u  %-8s %5u %5u  %s\n",
+                   i,
+                   tiku_process_state_str(p->state),
+                   p->sram_used, p->fram_used,
+                   p->name ? p->name : "(null)");
     }
 
     CLI_PRINTF("---\n");
-    CLI_PRINTF("%u process(es) active\n", count);
+    CLI_PRINTF("%u process(es) registered\n", tiku_process_count());
     CLI_PRINTF("Event queue: %u/%u\n",
                 tiku_process_queue_length(), TIKU_QUEUE_SIZE);
 }

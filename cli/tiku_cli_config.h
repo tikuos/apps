@@ -40,11 +40,12 @@
  * @{
  */
 
-#define TIKU_CLI_CMD_HELP   1  /**< help  - List available commands */
-#define TIKU_CLI_CMD_PS     1  /**< ps    - List active processes */
-#define TIKU_CLI_CMD_INFO   1  /**< info  - System overview */
-#define TIKU_CLI_CMD_TIMER  1  /**< timer - Software timer status */
-#define TIKU_CLI_CMD_KILL   1  /**< kill  - Terminate a process */
+#define TIKU_CLI_CMD_HELP   1  /**< help   - List available commands */
+#define TIKU_CLI_CMD_PS     1  /**< ps     - List active processes */
+#define TIKU_CLI_CMD_INFO   1  /**< info   - System overview */
+#define TIKU_CLI_CMD_TIMER  1  /**< timer  - Software timer status */
+#define TIKU_CLI_CMD_KILL   1  /**< kill   - Stop a process */
+#define TIKU_CLI_CMD_RESUME 1  /**< resume - Resume a stopped process */
 
 /** @} */
 
@@ -63,7 +64,7 @@
  *        EXTRA_CFLAGS="-DTIKU_KITS_NET_TCP_ENABLE=1 -DTIKU_CLI_TCP_ENABLE=1"
  */
 #ifndef TIKU_CLI_TCP_ENABLE
-#define TIKU_CLI_TCP_ENABLE 1
+#define TIKU_CLI_TCP_ENABLE 0
 #endif
 
 /** @} */
